@@ -1,95 +1,74 @@
-const Refuge = (() => {
-  const BASE = 90;          // score d'un animal sans aucun souci
-  const BONUS_MAX = 10;     // bonus d'ancienneté maximal (+10 pts)
-  const SEUIL_ABSENCE = 4;  // à partir de 4 h, la solitude compte
-  const ABSENCE_LONGUE = 8; // au-delà, vigilance même si l'animal tolère
-
-  // Données du dossier. jourDemo = nombre de jours au refuge (valeurs fictives)
-  const animaux = [
-    { nom: 'Rex',   espece: 'Chien',   sexe: 'inconnu', energie: 'forte',   seul: false, enfants: true,  jourDemo: 120, disponible: true },
-    { nom: 'Mia',   espece: 'Chatte',  sexe: 'femelle', energie: 'faible',  seul: true,  enfants: false, jourDemo: 200, disponible: true },
-    { nom: 'Bouba', espece: 'Chien',   sexe: 'inconnu', energie: 'moyenne', seul: true,  enfants: true,  jourDemo: 30,  disponible: true },
-    { nom: 'Pixel', espece: 'Chat',    sexe: 'inconnu', energie: 'forte',   seul: true,  enfants: true,  jourDemo: 10,  disponible: true },
-    { nom: 'Nala',  espece: 'Chienne', sexe: 'femelle', energie: 'faible',  seul: false, enfants: false, jourDemo: 150, disponible: true },
-  ];
-
-  // Candidats du dossier
-  const profils = {
-    famille:  { logement: 'jardin',      enfants: 'oui', absence: '8', experience: 'confirme' },
-    retraite: { logement: 'appartement', enfants: 'non', absence: '1', experience: 'confirme' },
-  };
-
-  function dateLocale(d = new Date()) {
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const j = String(d.getDate()).padStart(2, '0');
-    return d.getFullYear() + '-' + m + '-' + j;
+/* Règles de démonstration, à valider par le refuge. Aucun modèle entraîné. */
+(function () {
+  const animaux = Object.freeze([
+    {nom:'Rex', jourDemo:160, espece:'Chien', energie:'forte', seul:false, enfants:true},
+    {nom:'Mia', jourDemo:190, espece:'Chatte', energie:'faible', seul:true, enfants:false},
+    {nom:'Bouba', jourDemo:95, espece:'Chien', energie:'moyenne', seul:true, enfants:true},
+    {nom:'Pixel', jourDemo:25, espece:'Chat', energie:'forte', seul:true, enfants:true},
+    {nom:'Nala', jourDemo:220, espece:'Chienne', energie:'faible', seul:false, enfants:false},
+  ].map(Object.freeze));
+  const profils = Object.freeze({
+    famille:{logement:'jardin', enfants:'oui', absence:'8', experience:'inconnue'},
+    retraite:{logement:'appartement', enfants:'non', absence:'1', experience:'inconnue'},
+  });
+  const jourMs=86400000;
+  function dateLocale(d=new Date()) {
+    return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
   }
-
-  // Nombre de jours depuis la date d'arrivée ; null si vide, invalide ou dans le futur
-  function joursAuRefuge(date) {
-    if (!date) return null;
-    const [y, m, j] = date.split('-').map(Number);
-    const arrivee = new Date(y, m - 1, j);
-    if (arrivee.getFullYear() !== y || arrivee.getMonth() !== m - 1 || arrivee.getDate() !== j) return null;
-    const auj = new Date(); auj.setHours(0, 0, 0, 0);
-    const diff = Math.round((auj - arrivee) / 86400000);
-    return diff < 0 ? null : diff;
+  function dateValide(iso) {
+    if(typeof iso!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(iso))return false;
+    const ms=Date.parse(iso+'T00:00:00Z');
+    return Number.isFinite(ms)&&new Date(ms).toISOString().slice(0,10)===iso;
   }
-
-  function classer(profil, liste) {
-    const absence = Number(profil.absence);
-    if (!['appartement', 'maison', 'jardin'].includes(profil.logement) ||
-        !['oui', 'non'].includes(profil.enfants) ||
-        !['debutant', 'confirme', 'inconnue'].includes(profil.experience) ||
-        profil.absence === '' || profil.absence == null ||
-        !Number.isFinite(absence) || absence < 0 || absence > 24) {
-      throw new Error('Renseigne les quatre critères du candidat.');
+  function joursAuRefuge(arrivee, aujourdHui=dateLocale()) {
+    if(!dateValide(arrivee)||!dateValide(aujourdHui)||arrivee>aujourdHui)return null;
+    return (Date.parse(aujourdHui)-Date.parse(arrivee))/jourMs;
+  }
+  function classer(p, catalogue = animaux, aujourdHui=dateLocale()) {
+    if (!['appartement','maison','jardin'].includes(p.logement) ||
+      !['oui','non'].includes(p.enfants) ||
+      !['debutant','confirme','inconnue'].includes(p.experience) ||
+      !/^\d+(\.\d+)?$/.test(String(p.absence)) || Number(p.absence)>24) {
+      throw new TypeError('Complétez les quatre critères. L’absence doit être comprise entre 0 et 24 h.');
     }
-
-    const resultats = liste.map(a => {
-      const chien = a.espece.startsWith('Chien');
-      let score = BASE;
-      const alertes = [], raisons = [], risques = [];
-
-      // Enfants
-      if (profil.enfants === 'oui') {
-        if (a.enfants) raisons.push('Cohabite bien avec des enfants');
-        else { score -= 40; alertes.push('Ne supporte pas les enfants, or il y en a au foyer'); }
+    const h=Number(p.absence);
+    return catalogue.map(a=>{
+      let score=72;
+      const raisons=[], risques=[], alertes=[];
+      if(p.enfants==='oui') {
+        if(a.enfants) {score+=8; raisons.push('Cohabitation avec des enfants indiquée');}
+        else {score-=45; alertes.push('Cohabitation avec des enfants déconseillée');}
       }
-
-      // Solitude
-      if (absence >= SEUIL_ABSENCE) {
-        if (a.seul) {
-          raisons.push('Tolère la solitude (absence de ' + absence + ' h)');
-          if (absence > ABSENCE_LONGUE) { score -= 10; risques.push('Absence très longue : prévoir une solution de garde'); }
-        } else {
-          score -= 40;
-          alertes.push('A besoin de présence, or le candidat est absent ' + absence + ' h par jour');
+      if(h>=4 && !a.seul) {
+        score-=45; alertes.push('Tolère mal la solitude : '+h+' h d’absence déclarées');
+      } else if(h>=6) {
+        score-=9; risques.push('Confirmer la durée de solitude tolérée : '+h+' h prévues');
+      } else if(h<=2) {
+        score+=8; raisons.push('Présence quotidienne importante');
+      }
+      if(a.energie==='forte') {
+        score-=8; risques.push('Besoin important d’activité et de stimulation');
+        if(p.logement==='appartement') {
+          score-=6; risques.push('En appartement, vérifier le plan d’activité avec le candidat');
         }
-      } else {
-        raisons.push('Candidat très présent');
+        if(p.experience==='debutant') {
+          score-=8; risques.push('Prévoir un accompagnement pour une première adoption');
+        }
       }
-
-      // Énergie, logement, expérience
-      if (a.energie === 'forte') {
-        if (chien && profil.logement === 'appartement') { score -= 15; risques.push('Chien très énergique en appartement : sorties longues nécessaires'); }
-        else if (chien && profil.logement === 'maison') { score -= 10; risques.push('Chien très énergique sans jardin'); }
-        else if (chien && profil.logement === 'jardin') raisons.push('Jardin adapté à un chien énergique');
-        if (profil.experience === 'debutant') { score -= 10; risques.push('Animal exigeant pour une première adoption'); }
-      } else if (a.energie === 'faible' && chien && profil.logement === 'appartement') {
-        raisons.push('Énergie faible : adapté à un appartement');
+      if(a.energie==='faible' && p.enfants==='non') {
+        score+=5; raisons.push('Animal calme, pas d’enfants déclarés');
       }
-
-      // Ancienneté : bonus seulement si aucune alerte
-      const anciennete = joursAuRefuge(a.arrivee);
-      const bonus = (!alertes.length && anciennete !== null) ? Math.min(BONUS_MAX, Math.floor(anciennete / 20)) : 0;
-      score = Math.max(0, Math.min(100, score + bonus));
-
-      return { ...a, score, anciennete, bonus, alertes, raisons, risques };
-    });
-
-    return resultats.sort((x, y) => y.score - x.score || (y.anciennete ?? -1) - (x.anciennete ?? -1));
+      if(!raisons.length) raisons.push('Pas de point favorable confirmé par les critères saisis');
+      if(p.experience==='inconnue') risques.push('Expérience du candidat à préciser');
+      const compatibilite=Math.min(100,Math.max(0,score));
+      const anciennete=joursAuRefuge(a.arrivee,aujourdHui);
+      const bonus=alertes.length||anciennete===null?0:Math.min(10,2*Math.floor(anciennete/30));
+      const scoreFinal=Math.min(100,compatibilite+bonus);
+      return {...a,score:scoreFinal,compatibilite,anciennete,bonus,raisons,risques,alertes};
+    }).sort((a,b)=>Number(a.alertes.length>0)-Number(b.alertes.length>0)||
+      b.score-a.score||(!a.alertes.length?((b.anciennete??-1)-(a.anciennete??-1)):0)||a.nom.localeCompare(b.nom,'fr'));
   }
-
-  return { animaux, profils, classer, dateLocale, joursAuRefuge };
+  const api = {animaux,profils,classer,dateLocale,joursAuRefuge};
+  if(typeof module!=='undefined') module.exports=api;
+  else globalThis.Refuge=api;
 })();

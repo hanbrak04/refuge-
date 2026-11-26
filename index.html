@@ -117,7 +117,7 @@
 </section>
 <p class="footer">Prototype avec les données fictives du dossier. Fiches et profils de démo enregistrés dans ce navigateur uniquement. Les seuils sont des hypothèses de test, à valider avec le refuge.</p>
 </main>
-<script src="{{ url_for('static', filename='moteur.js') }}"></script>
+<script src="moteur.js"></script>
 <script>
 const form=document.querySelector('#form'), output=document.querySelector('#resultats'), hint=document.querySelector('#hypothese'), error=document.querySelector('#erreur');
 function tag(t,c,value){const e=document.createElement(t);if(c)e.className=c;if(value)e.textContent=value;return e;}
