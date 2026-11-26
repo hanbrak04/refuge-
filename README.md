@@ -1,11 +1,13 @@
 # Refuge des Quatre Vents · Prototype d’aide à l’adoption
 
-Ouvrir `index.html` dans un navigateur après avoir extrait le dossier. Aucun compte, serveur, API, installation ou connexion internet n’est nécessaire. Les réponses au formulaire du candidat ne sont ni envoyées ni enregistrées. Ne pas saisir d’informations personnelles.
+**[▶ Ouvrir la démo V5](https://refuge-quatre-vents-demo.vercel.app/)** · Données fictives, sans installation.
+
+Pour utiliser le prototype hors ligne, extraire le dossier et ouvrir `index.html`. Aucun compte, serveur ni installation n’est nécessaire. La saisie libre n’est pas enregistrée ; les fiches et les profils fictifs enregistrés restent dans ce navigateur. Ne pas saisir d’informations personnelles.
 
 ## Démo (1 minute)
 
 1. Sélectionner **Famille Martin** dans la liste : Bouba arrive en tête. Montrer la vigilance sur 8 h d’absence et les alertes de Rex (solitude), de Mia (enfants) et de Nala (les deux).
-2. Sélectionner **M. Petit** dans la liste : Mia arrive en tête. L’absence quotidienne de 1 h et l’absence d’enfants au foyer sont des hypothèses pour la démo ; modifier le profil si besoin.
+2. Sélectionner **M. Petit** dans la liste : dans la V5, Nala et Mia ont le même score, et Nala passe devant grâce à son séjour plus long. L’absence quotidienne de 1 h et l’absence d’enfants au foyer sont des hypothèses pour la démo ; modifier le profil si besoin.
 3. Conclure : ce classement prépare la rencontre. Il ne décide ni d’approuver ni de refuser l’adoption.
 
 Les cinq animaux sont les exemples fictifs du dossier. Le test dans le chat gratuit n’en utilise que trois : faire ce test séparément, coller son résultat réel et ne pas l’appeler un test du prototype.
