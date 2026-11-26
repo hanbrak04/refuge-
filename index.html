@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refuge des Quatre Vents | Aide à l’adoption</title>
+<style>
+:root{color-scheme:light;--ink:#17382f;--muted:#456055;--paper:#fbfaf5;--mint:#e6f1e9;--line:#cddbd1;--warn:#8a4026;--amber:#fbede1}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,sans-serif}main{max-width:1170px;margin:auto;padding:30px 28px 50px}header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}h1,h2,h3,p{margin:0}h1{font:700 clamp(32px,5vw,56px)/1.08 Georgia,serif;margin:8px 0 12px}.kicker{text-transform:uppercase;letter-spacing:.15em;font-size:12px;font-weight:780}header p,small,.caption{color:var(--muted)}.layout{display:grid;grid-template-columns:335px 1fr;gap:24px;align-items:start}.panel,article,.empty{border:1px solid var(--line);border-radius:16px;background:white;padding:17px}.panel{background:var(--mint)}h2{font-size:21px;margin-bottom:3px}.examples{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}label{display:block;font-size:14px;font-weight:700;margin:10px 0}input,select,button{font:inherit;border-radius:9px}input,select{width:100%;background:white;border:1px solid #a9bfb2;color:var(--ink);padding:9px;margin-top:4px}button{cursor:pointer;border:1px solid #648376;background:white;color:var(--ink);padding:7px 10px;font-weight:650;font-size:14px}button[type=submit]{background:var(--ink);color:white;width:100%;margin:10px 0 6px;padding:10px}:focus-visible{outline:3px solid #a24b20;outline-offset:3px}.caption,.error{font-size:13px}.error,.warn{color:var(--warn)}.list{display:grid;gap:9px;margin-top:10px}.head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.head h3{font-size:18px;margin-right:auto}.flag,.score{display:inline-block;border-radius:99px;padding:3px 9px;font-size:13px;font-weight:750}.score{background:var(--mint)}.flag{background:var(--amber);color:var(--warn)}ul{margin:6px 0 0;padding-left:21px;font-size:14px}.empty{color:var(--muted)}.footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}@media(max-width:750px){main{padding:18px 13px 30px}.layout{grid-template-columns:1fr;gap:15px}}
+
+[hidden]{display:none!important}
+.navigation{display:flex;gap:8px;margin:0 0 22px}
+.navigation button[aria-pressed=true]{background:var(--ink);color:white}
+.catalogue-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+.catalogue-grid article{overflow-wrap:anywhere}
+.catalogue-grid button{margin-top:10px}
+#edition{margin:16px 0}
+.champs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:0 14px}
+.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.actions button[type=submit]{width:auto;margin:0}
+#retour-fiche{margin-top:10px;color:var(--muted)}
+@media(max-width:750px){.navigation button{min-height:44px}}
+
+.catalogue-heading{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.primary{background:var(--ink);color:white}
+#edition-candidat{margin:16px 0}
+#retour-candidat{margin-top:10px;color:var(--muted)}
+.animal-art{height:88px;border-radius:11px;margin-bottom:11px;display:grid;place-items:center;background:radial-gradient(circle at 14% 18%,#ffffff9e 0 5%,transparent 6%),radial-gradient(circle at 84% 76%,#fff8 0 8%,transparent 9%),var(--art,#edf0da);font-size:47px;position:relative}
+.animal-art::after{content:"✦";position:absolute;font-size:17px;right:18%;top:16%;color:#385e4f}
+.fiche-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fiche-meta span{padding:3px 9px;border-radius:20px;background:#eef3ea;font-size:13px}
+.rank-card{border-left:4px solid #81ad94}
+.rank-card.has-alert{border-left-color:#bc8055}
+.avatar{font-size:23px}
+#liste-profils{margin:9px 0}
+#ouvrir-candidats{margin:0 0 9px}
+@media(max-width:450px){.navigation{flex-wrap:wrap}.catalogue-heading{flex-wrap:wrap}}
+.filtres{display:flex;flex-wrap:wrap;gap:8px 14px;margin:9px 0}
+.filtres label{margin:0;flex:1 1 125px;max-width:220px}
+.filtres select{min-height:38px}
+.mode-groupe{display:block;width:100%;margin:9px 0;background:#d6e9dc}
+.mode-groupe[aria-pressed=true]{background:var(--ink);color:white}
+.groupe{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--mint)}
+.groupe summary{cursor:pointer;border-radius:8px;padding:4px;overflow-wrap:anywhere}
+.groupe .list{margin-top:10px}
+.animal-identite{display:inline-flex;align-items:center;gap:7px;line-height:1}
+.sexe-badge{display:inline-grid;place-items:center;font-family:system-ui,sans-serif;font-size:22px;width:31px;height:31px;border-radius:50%;background:#e6e0f3;border:1px solid #bcb2d0;color:#46296d;line-height:1}
+.animal-art .sexe-badge{position:absolute;right:12px;bottom:9px}
+.required-note{margin:10px 0 2px}.required-mark{color:var(--warn);font-weight:800}
+</style>
+<main>
+<header><div class="kicker">Refuge des Quatre Vents · Prototype</div><h1>Trouver la bonne rencontre</h1><p>Un classement expliqué pour préparer l’entretien. L’adoption reste une décision des bénévoles.</p></header>
+<nav class="navigation" aria-label="Sections du refuge">
+<button id="voir-matching" type="button" aria-controls="matching" aria-pressed="true">Compatibilités</button>
+<button id="voir-candidats" type="button" aria-controls="candidats" aria-pressed="false">Candidats</button>
+<button id="voir-animaux" type="button" aria-controls="catalogue" aria-pressed="false">Animaux</button>
+</nav>
+<div id="matching" class="layout">
+<section class="panel" aria-labelledby="profile"><h2 id="profile">Profil du candidat</h2><p class="caption">Choisis un candidat enregistré ou teste un profil libre.</p>
+<label>Profils enregistrés<select id="liste-profils"><option value="">Saisie libre</option></select></label>
+<button id="comparer-tous" class="mode-groupe" type="button" aria-pressed="false">Comparer tous les candidats</button>
+<button id="ouvrir-candidats" type="button">+ Ajouter un candidat</button>
+<form id="form"><p class="caption required-note">* Champs obligatoires pour lancer la recherche.</p>
+<label>Logement <span class="required-mark" aria-hidden="true">*</span><select name="logement" required><option value="">Sélectionner</option><option value="appartement">Appartement</option><option value="maison">Maison sans jardin</option><option value="jardin">Maison avec jardin</option></select></label>
+<label>Enfants au foyer <span class="required-mark" aria-hidden="true">*</span><select name="enfants" required><option value="">Sélectionner</option><option value="oui">Oui</option><option value="non">Non</option></select></label>
+<label>Absence quotidienne (heures) <span class="required-mark" aria-hidden="true">*</span><input name="absence" type="number" min="0" max="24" step="0.5" required></label>
+<label>Expérience avec les animaux <span class="required-mark" aria-hidden="true">*</span><select name="experience" required><option value="">Sélectionner</option><option value="debutant">Première adoption</option><option value="confirme">A déjà vécu avec un animal</option><option value="inconnue">Non renseignée</option></select></label>
+<button type="submit">Voir les compatibilités</button>
+<p class="caption" id="hypothese"></p><p class="error" id="erreur" role="alert"></p>
+</form></section>
+<section aria-labelledby="ranking"><h2 id="ranking">Animaux à rencontrer</h2><p id="contexte-resultats" class="caption"></p><p class="caption">Score indicatif sur 100. Parmi les animaux sans alerte, l’ancienneté peut donner jusqu’à +10 points.</p><div class="filtres" role="group" aria-label="Filtres animaux">
+<label>Espèce<select id="match-espece"><option value="tous">Toutes</option><option value="chien">Chiens</option><option value="chat">Chats</option></select></label>
+<label>Disponibilité<select id="match-dispo"><option value="disponibles">Disponibles</option><option value="tous">Tous</option><option value="indisponibles">Indisponibles</option></select></label>
+</div><div id="resultats" class="list" aria-live="polite"><div class="empty">Choisis un profil d’exemple ou saisis les quatre critères.</div></div></section>
+</div>
+<section id="catalogue" aria-labelledby="titre-catalogue" hidden>
+<div class="catalogue-heading"><div><h2 id="titre-catalogue">Tous les animaux du refuge</h2>
+<p id="compteur-animaux" class="caption"></p><p class="caption">Les dates préremplies sont fictives. Saisis la date d’entrée dans ce refuge.</p></div><button id="ajouter-animal" class="primary" type="button">+ Ajouter un animal</button></div>
+<p class="caption">Les modifications des fiches sont conservées dans ce navigateur, sans compte ni synchronisation.</p>
+<div class="filtres" role="group" aria-label="Filtres animaux">
+<label>Espèce<select id="filtre-espece"><option value="tous">Toutes</option><option value="chien">Chiens</option><option value="chat">Chats</option></select></label>
+<label>Disponibilité<select id="filtre-dispo"><option value="tous">Tous</option><option value="disponibles">Disponibles</option><option value="indisponibles">Indisponibles</option></select></label>
+</div><p id="retour-fiche" role="status"></p>
+<form id="edition" class="panel" hidden autocomplete="off">
+<h3 id="titre-edition">Modifier la fiche</h3>
+<div class="champs">
+<label>Nom<input name="nom" maxlength="60" required></label>
+<label>Espèce<select name="espece" required><option>Chien</option><option>Chat</option></select></label>
+<label>Sexe<select name="sexe"><option value="inconnu">Non renseigné</option><option value="femelle">♀ Femelle</option><option value="male">♂ Mâle</option></select></label>
+<label>Énergie<select name="energie" required><option>faible</option><option>moyenne</option><option>forte</option></select></label>
+<label>Tolère la solitude<select name="seul" required><option value="oui">Oui</option><option value="non">Non</option></select></label>
+<label>Cohabitation avec des enfants<select name="enfants" required><option value="oui">Oui</option><option value="non">Non</option></select></label>
+<label>Date d’arrivée au refuge<input type="date" name="arrivee"></label>
+<label>Disponibilité<select name="disponible" required><option value="oui">Disponible</option><option value="non">Indisponible</option></select></label>
+</div>
+<div class="actions"><button type="submit">Enregistrer la fiche</button><button type="button" id="annuler-edition">Annuler</button></div>
+<p id="erreur-edition" class="error" role="alert"></p>
+</form>
+<div id="fiches" class="list catalogue-grid"></div>
+</section>
+<section id="candidats" aria-labelledby="titre-candidats" hidden>
+<div class="catalogue-heading"><div><h2 id="titre-candidats">Tous les candidats</h2>
+<p class="caption">Utilise un pseudonyme de démo, sans nom réel ni coordonnées.</p></div>
+<button type="button" id="ajouter-candidat" class="primary">+ Ajouter un candidat</button></div>
+<p id="retour-candidat" role="status"></p>
+<form id="edition-candidat" class="panel" hidden autocomplete="off">
+<h3 id="titre-edition-candidat">Nouveau candidat</h3>
+<div class="champs">
+<label>Pseudonyme<input name="alias" maxlength="60" required></label>
+<label>Logement<select name="logement" required><option value="">Sélectionner</option><option value="appartement">Appartement</option><option value="maison">Maison sans jardin</option><option value="jardin">Maison avec jardin</option></select></label>
+<label>Enfants au foyer<select name="enfants" required><option value="">Sélectionner</option><option value="oui">Oui</option><option value="non">Non</option></select></label>
+<label>Absence quotidienne (heures)<input name="absence" type="number" min="0" max="24" step="0.5" required></label>
+<label>Expérience<select name="experience" required><option value="">Sélectionner</option><option value="debutant">Première adoption</option><option value="confirme">A déjà vécu avec un animal</option><option value="inconnue">Non renseignée</option></select></label>
+</div>
+<div class="actions"><button type="submit">Enregistrer le candidat</button><button id="annuler-candidat" type="button">Annuler</button></div>
+<p id="erreur-candidat" class="error" role="alert"></p>
+</form>
+<div id="cartes-candidats" class="list catalogue-grid"></div>
+</section>
+<p class="footer">Prototype avec les données fictives du dossier. Fiches et profils de démo enregistrés dans ce navigateur uniquement. Les seuils sont des hypothèses de test, à valider avec le refuge.</p>
+</main>
+<script src="{{ url_for('static', filename='moteur.js') }}"></script>
+<script>
+const form=document.querySelector('#form'), output=document.querySelector('#resultats'), hint=document.querySelector('#hypothese'), error=document.querySelector('#erreur');
+function tag(t,c,value){const e=document.createElement(t);if(c)e.className=c;if(value)e.textContent=value;return e;}
+let classementActif=false, vueGroupe=false;
+const boutonGroupe=document.querySelector('#comparer-tous');
+function modeGroupe(actif){
+  vueGroupe=actif;boutonGroupe.setAttribute('aria-pressed',String(actif));
+}
+function filtrerAnimaux(prefix){
+  const type=document.querySelector('#'+prefix+'-espece').value;
+  const dispo=document.querySelector('#'+prefix+'-dispo').value;
+  return catalogueCourant.filter(a=>(type==='tous'||a.espece.toLowerCase().startsWith(type)) &&
+    (dispo==='tous'||(dispo==='disponibles')===a.disponible));
+}
+function cartesClassement(ranking){
+  if(!ranking.length) return [tag('div','empty','Aucun animal ne correspond aux filtres. Essaie une autre espèce ou disponibilité.')];
+  return ranking.map((a,i)=>{
+    const card=tag('article',a.alertes.length?'rank-card has-alert':'rank-card');
+    const head=tag('div','head'), details=tag('ul'), avatar=tag('span','avatar',icone(a));
+    avatar.setAttribute('role','img');avatar.setAttribute('aria-label',a.espece);
+    head.append(avatar,tag('h3','',(i+1)+'. '+a.nom));
+    const sexe=badgeSexe(a);if(sexe)head.append(sexe);
+    if(!a.disponible)head.append(tag('span','flag','Indisponible'));
+    if(a.alertes.length)head.append(tag('span','flag','À vérifier en entretien'));
+    head.append(tag('span','score',a.score+' / 100'));
+    if(a.anciennete!==null) details.append(tag('li','','Au refuge depuis '+a.anciennete+' j'+(a.bonus?' · bonus d’ancienneté : +'+a.bonus+' pts':'')+(a.alertes.length?' · aucun bonus en présence d’une alerte':'')));
+    else details.append(tag('li','','Date d’arrivée non renseignée · aucun bonus'));
+    for(const msg of a.alertes)details.append(tag('li','warn','Alerte : '+msg));
+    for(const msg of a.raisons)details.append(tag('li','',msg));
+    for(const msg of a.risques)details.append(tag('li','','Vigilance : '+msg));
+    card.append(head,details);
+    return card;
+  });
+}
+function afficher(){
+  modeGroupe(false);
+  try{
+    const ranking=Refuge.classer(Object.fromEntries(new FormData(form)), filtrerAnimaux('match'));
+    classementActif=true;error.textContent='';
+    output.replaceChildren(...cartesClassement(ranking));
+    contexte.textContent=(profilsCourants[selectProfils.value]?.alias || 'Saisie libre')+' · '+ranking.length+' animaux évalués';
+  }catch(e){classementActif=false;contexte.textContent='';output.replaceChildren(tag('div','empty','Aucun classement pour ce profil.'));error.textContent=e.message;}
+}
+function afficherTous(){
+  modeGroupe(true);classementActif=true;error.textContent='';
+  const animaux=filtrerAnimaux('match');
+  contexte.textContent=profilsCourants.length+' candidats · '+animaux.length+' animaux par classement';
+  output.replaceChildren(...profilsCourants.map((p,i)=>{
+    const classement=Refuge.classer(p,animaux), groupe=tag('details','groupe'), liste=tag('div','list');
+    groupe.open=i===0;
+    const top=classement[0];
+    const resume=tag('summary','',p.alias+(top?' · '+top.nom+' en tête'+(top.alertes.length?' (point d’alerte)':''):' · Aucun résultat'));
+    liste.append(...cartesClassement(classement));
+    groupe.append(resume,liste);return groupe;
+  }));
+}
+function actualiserClassement(){
+  if(classementActif) (vueGroupe?afficherTous:afficher)();
+}
+boutonGroupe.addEventListener('click',afficherTous);
+form.addEventListener('submit',e=>{e.preventDefault();afficher();});
+form.addEventListener('input',()=>{
+  modeGroupe(false);selectProfils.value='';classementActif=false;hint.textContent='';contexte.textContent='';error.textContent='';
+  output.replaceChildren(tag('div','empty','Profil modifié en saisie libre. Relance le classement.'));
+});
+const cle='refuge-quatre-vents-fiches-v1';
+function normaliserFiche(a){
+  const valeur=a.sexe ?? (['Chienne','Chatte'].includes(a.espece)?'femelle':'inconnu');
+  return {...a,arrivee:a.arrivee??'',espece:a.espece.startsWith('Chat')?'Chat':'Chien',sexe:valeur,disponible:a.disponible!==false};
+}
+const depart=Refuge.animaux.map(a=>{
+  const d=new Date(); d.setDate(d.getDate()-a.jourDemo);
+  const {jourDemo,...fiche}=a;
+  return normaliserFiche({...fiche,arrivee:Refuge.dateLocale(d)});
+});
+function ficheValide(a){
+  return a && typeof a.nom==='string' && a.nom.trim().length>0 && a.nom.length<=60 &&
+    ['Chien','Chienne','Chat','Chatte'].includes(a.espece) &&
+    ['faible','moyenne','forte'].includes(a.energie) &&
+    typeof a.seul==='boolean' && typeof a.enfants==='boolean' &&
+    (a.sexe===undefined || ['inconnu','femelle','male'].includes(a.sexe));
+}
+let catalogueCourant=depart;
+try{
+  const archive=JSON.parse(localStorage.getItem(cle));
+  if(Array.isArray(archive) && archive.length>=depart.length && archive.every(ficheValide)) catalogueCourant=archive.map(normaliserFiche);
+}catch{}
+const edition=document.querySelector('#edition'), fiches=document.querySelector('#fiches');
+const retour=document.querySelector('#retour-fiche'), erreurEdition=document.querySelector('#erreur-edition');
+const boutonsVues=['matching','animaux','candidats'].map(x=>document.querySelector('#voir-'+x));
+const vues=['matching','catalogue','candidats'].map(x=>document.querySelector('#'+x));
+function ouvrirVue(i){
+  vues.forEach((vue,j)=>vue.hidden=i!==j);
+  boutonsVues.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+}
+boutonsVues.forEach((btn,i)=>btn.addEventListener('click',()=>ouvrirVue(i)));
+let selection=null;
+function icone(a){return a.espece.startsWith('Chat')?'🐱':'🐶';}
+function badgeSexe(a){
+  if(!['femelle','male'].includes(a.sexe))return null;
+  const femelle=a.sexe==='femelle', el=tag('span','sexe-badge',femelle?'♀':'♂');
+  el.setAttribute('role','img');el.setAttribute('aria-label',femelle?'Femelle':'Mâle');
+  el.title=femelle?'Femelle':'Mâle';return el;
+}
+const couleurs=['#efe5d1','#e8e4f4','#dfece0','#f5e3d9','#dbe9ee'];
+const ouiNon=v=>v?'oui':'non';
+function montrerFiches(){
+  const visibles=filtrerAnimaux('filtre');
+  document.querySelector('#compteur-animaux').textContent=visibles.length+' sur '+catalogueCourant.length+' fiches';
+  if(!visibles.length){fiches.replaceChildren(tag('div','empty','Aucun animal ne correspond aux filtres.'));return;}
+  fiches.replaceChildren(...visibles.map(a=>{
+    const i=catalogueCourant.indexOf(a);
+    const card=tag('article'), titre=tag('h3','',a.nom);
+    titre.id='fiche-titre-'+i;card.setAttribute('aria-labelledby',titre.id);
+    const changer=tag('button','','Modifier');changer.type='button';
+    changer.id='modifier-'+i;changer.setAttribute('aria-label','Modifier la fiche de '+a.nom);
+    changer.addEventListener('click',()=>ouvrirEdition(i));
+    const art=tag('div','animal-art'), animal=tag('span','animal-identite',icone(a));
+    animal.setAttribute('role','img');animal.setAttribute('aria-label',a.espece);art.append(animal);
+    const sexe=badgeSexe(a);if(sexe)art.append(sexe);art.style.setProperty('--art',couleurs[i%couleurs.length]);
+    const faits=tag('div','fiche-meta');
+    const depuis=Refuge.joursAuRefuge(a.arrivee);
+    faits.append(tag('span','',depuis===null?'Arrivée non renseignée':'Au refuge depuis '+depuis+' j'));
+    faits.append(tag('span','','Énergie : '+a.energie),tag('span','',a.seul?'Solitude tolérée':'Besoin de présence'),tag('span','',a.enfants?'Vit avec des enfants':'Sans enfants'),tag('span',a.disponible?'':'warn',a.disponible?'Disponible':'Indisponible'));
+    card.append(art,titre,faits,changer);
+    return card;
+  }));
+}
+function ouvrirEdition(i){
+  selection=i;
+  const a=catalogueCourant[i] || {nom:"",espece:"Chien",sexe:"inconnu",arrivee:"",energie:"moyenne",seul:false,enfants:false,disponible:true};
+  edition.hidden=false;edition.elements.arrivee.max=Refuge.dateLocale();
+  document.querySelector('#titre-edition').textContent=a.nom?'Modifier la fiche de '+a.nom:'Nouvel animal';
+  for(const [k,v] of Object.entries(a)){
+    if(edition.elements[k]) edition.elements[k].value=typeof v==='boolean'?ouiNon(v):v;
+  }
+  retour.textContent='';erreurEdition.textContent='';
+  edition.elements.nom.focus();
+}
+function fermerEdition(){
+  const i=selection;selection=null;edition.hidden=true;erreurEdition.textContent='';
+  (document.querySelector('#modifier-'+i)||document.querySelector('#ajouter-animal')).focus();
+}
+document.querySelector('#annuler-edition').addEventListener('click',fermerEdition);
+document.querySelector('#ajouter-animal').addEventListener('click',()=>ouvrirEdition(catalogueCourant.length));
+edition.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(selection===null) return;
+  const champs=Object.fromEntries(new FormData(edition));
+  const fiche={nom:champs.nom.trim(),espece:champs.espece,sexe:champs.sexe,arrivee:champs.arrivee,energie:champs.energie,
+     seul:champs.seul==='oui',enfants:champs.enfants==='oui',disponible:champs.disponible==='oui'};
+  if(fiche.arrivee && Refuge.joursAuRefuge(fiche.arrivee)===null){
+    erreurEdition.textContent='Indique une date d’arrivée valide, pas dans le futur.';return;
+  }
+  if(!ficheValide(fiche) || !['oui','non'].includes(champs.seul) || !['oui','non'].includes(champs.enfants) || !['oui','non'].includes(champs.disponible)){
+    erreurEdition.textContent='Vérifie le nom et les critères de la fiche.';return;
+  }
+  catalogueCourant=[...catalogueCourant];catalogueCourant[selection]=fiche;
+  try {
+    localStorage.setItem(cle,JSON.stringify(catalogueCourant));
+    retour.textContent='Fiche de '+fiche.nom+' enregistrée. Le classement utilise les nouvelles données.';
+  } catch {
+    retour.textContent='Fiche mise à jour pour cette session. Ce navigateur bloque l’enregistrement permanent.';
+  }
+  montrerFiches();fermerEdition();
+  actualiserClassement();
+});
+const cleProfils='refuge-quatre-vents-profils-v1';
+const profilsInitiaux=[
+  {alias:'Famille Martin',...Refuge.profils.famille},
+  {alias:'M. Petit',...Refuge.profils.retraite},
+];
+const selectProfils=document.querySelector('#liste-profils'), contexte=document.querySelector('#contexte-resultats');
+const editionCandidat=document.querySelector('#edition-candidat'), cartesCandidats=document.querySelector('#cartes-candidats');
+const retourCandidat=document.querySelector('#retour-candidat'), erreurCandidat=document.querySelector('#erreur-candidat');
+const logements={appartement:'Appartement',maison:'Maison sans jardin',jardin:'Maison avec jardin'};
+const experiences={debutant:'Première adoption',confirme:'Déjà vécu avec un animal',inconnue:'Expérience non renseignée'};
+const champsProfil=['logement','enfants','absence','experience'];
+function profilValide(p){
+  return p && typeof p.alias==='string' && p.alias.trim().length>0 && p.alias.length<=60 &&
+    Object.hasOwn(logements,p.logement) && ['oui','non'].includes(p.enfants) &&
+    Object.hasOwn(experiences,p.experience) && typeof p.absence==='string' &&
+    /^[0-9]+([.][0-9]+)?$/.test(p.absence) && Number(p.absence)<=24;
+}
+let profilsCourants=profilsInitiaux;
+try{
+  const archive=JSON.parse(localStorage.getItem(cleProfils));
+  if(Array.isArray(archive) && archive.length>=2 && archive.every(profilValide)) profilsCourants=archive;
+}catch{}
+let editionProfil=null;
+function montrerCandidats(){
+  const selectionActuelle=selectProfils.value;
+  const libre=tag('option','','Saisie libre');libre.value='';
+  selectProfils.replaceChildren(libre,...profilsCourants.map((p,i)=>{
+    const o=tag('option','',p.alias);o.value=i;return o;
+  }));
+  selectProfils.value=selectionActuelle;
+  cartesCandidats.replaceChildren(...profilsCourants.map((p,i)=>{
+    const carte=tag('article'), actions=tag('div','actions');
+    const modifier=tag('button','','Modifier');modifier.type='button';modifier.id='modifier-candidat-'+i;modifier.setAttribute('aria-label','Modifier '+p.alias);
+    const comparer=tag('button','primary','Voir les compatibilités');comparer.type='button';comparer.setAttribute('aria-label','Voir les compatibilités pour '+p.alias);
+    modifier.addEventListener('click',()=>ouvrirEditionCandidat(i));
+    comparer.addEventListener('click',()=>{choisirCandidat(i);ouvrirVue(0);document.querySelector('#voir-matching').focus();});
+    actions.append(modifier,comparer);
+    carte.append(tag('h3','',p.alias),tag('p','caption',logements[p.logement]+' · '+p.absence+' h d’absence'),
+      tag('p','caption',(p.enfants==='oui'?'Avec enfants':'Sans enfants')+' · '+experiences[p.experience]),actions);
+    return carte;
+  }));
+}
+function choisirCandidat(i){
+  const p=profilsCourants[i];if(!p)return;
+  selectProfils.value=String(i);
+  for(const k of champsProfil) form.elements[k].value=p[k];
+  hint.textContent=i===1?'Exemple du dossier : la durée d’absence a été précisée pour la démo.':'';
+  afficher();
+}
+selectProfils.addEventListener('change',()=>{
+  if(selectProfils.value!==''){choisirCandidat(Number(selectProfils.value));return;}
+  modeGroupe(false);form.reset();hint.textContent='';contexte.textContent='';error.textContent='';classementActif=false;
+  output.replaceChildren(tag('div','empty','Saisis les quatre critères pour lancer la comparaison.'));
+});
+function ouvrirEditionCandidat(i, preRempli=false){
+  editionProfil=i;
+  editionCandidat.hidden=false;
+  const p=profilsCourants[i] || {alias:'',...Object.fromEntries(champsProfil.map(k=>[k,preRempli?form.elements[k].value:'']))};
+  document.querySelector('#titre-edition-candidat').textContent=p.alias?'Modifier '+p.alias:'Nouveau candidat';
+  for(const k of ['alias',...champsProfil]) editionCandidat.elements[k].value=p[k];
+  retourCandidat.textContent='';erreurCandidat.textContent='';
+  editionCandidat.elements.alias.focus();
+}
+function fermerCandidat(){
+  const i=editionProfil;editionProfil=null;editionCandidat.hidden=true;
+  (document.querySelector('#modifier-candidat-'+i)||document.querySelector('#ajouter-candidat')).focus();
+}
+document.querySelector('#ajouter-candidat').addEventListener('click',()=>ouvrirEditionCandidat(profilsCourants.length));
+document.querySelector('#ouvrir-candidats').addEventListener('click',()=>{ouvrirVue(2);ouvrirEditionCandidat(profilsCourants.length,true);});
+document.querySelector('#annuler-candidat').addEventListener('click',fermerCandidat);
+editionCandidat.addEventListener('submit',e=>{
+  e.preventDefault();if(editionProfil===null)return;
+  const p=Object.fromEntries(new FormData(editionCandidat));p.alias=p.alias.trim();
+  if(!profilValide(p)){erreurCandidat.textContent='Renseigne le pseudonyme et les quatre critères.';return;}
+  const i=editionProfil;
+  profilsCourants=[...profilsCourants];profilsCourants[i]=p;
+  try{
+    localStorage.setItem(cleProfils,JSON.stringify(profilsCourants));
+    retourCandidat.textContent='Profil « '+p.alias+' » enregistré dans ce navigateur.';
+  }catch{retourCandidat.textContent='Profil mis à jour pour cette session uniquement.';}
+  montrerCandidats();fermerCandidat();
+  if(vueGroupe) afficherTous();
+  else if(selectProfils.value===String(i)) choisirCandidat(i);
+});
+for(const champ of ['espece','dispo']){
+  document.querySelector('#filtre-'+champ).addEventListener('change',montrerFiches);
+  document.querySelector('#match-'+champ).addEventListener('change',actualiserClassement);
+}
+montrerFiches();montrerCandidats();
+</script>
+</html>
